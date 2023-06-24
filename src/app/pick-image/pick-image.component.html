@@ -1,0 +1,41 @@
+<div id="custom-19">
+  <h1 id="custom-20">Do you want to put your own photo?</h1>
+  <div id="custom-21">
+    <div id="custom-22">
+      <input
+      id="custom-23"
+        type="file"
+        accept=".jpg, .jpeg, .png"
+        (change)="onFileChange($event)"
+      />
+      <button
+      id="custom-24"
+        type="button"
+      >
+        Pick image
+      </button>
+    </div>
+  </div>
+  <div [ngClass]="state === false ? 'custom-27' : 'custom-28'">
+    <div id="custom-25">
+      <image-cropper
+        [imageChangedEvent]="imgChangeEvt"
+        [aspectRatio]="4 / 4"
+        [maintainAspectRatio]="true"
+        [resizeToWidth]="350"
+        format="jpeg"
+        (imageCropped)="cropImg($event)"
+        (imageLoaded)="imgLoad($event)"
+        (cropperReady)="initCropper()"
+        (loadImageFailed)="imgFailed()"
+      >
+      </image-cropper>
+      <button
+      id="custom-26"
+        (click)="apply()"
+      >
+        Apply
+      </button>
+    </div>
+  </div>
+</div>
