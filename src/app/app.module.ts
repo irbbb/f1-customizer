@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgModel } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { PreviewComponent } from './preview/preview.component';
@@ -24,7 +24,7 @@ import { AddToCartComponent } from './add-to-cart/add-to-cart.component';
     QuantityComponent,
     AddToCartComponent,
   ],
-  imports: [BrowserModule, ImageCropperModule, FormsModule],
+  imports: [BrowserModule, ImageCropperModule, FormsModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

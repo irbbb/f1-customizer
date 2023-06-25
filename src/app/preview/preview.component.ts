@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../shared.service';
+import { FormGroup, FormControl } from '@angular/forms';
 import jsPDF from 'jspdf';
 import * as htmlToImage from 'html-to-image';
 
@@ -13,8 +14,8 @@ export class PreviewComponent {
   croppedImage: any = '';
 
   constructor(public sharedService: SharedService) {
-    this.sharedService.miVariable$.subscribe((name) => {
-      if (name === true) {
+    this.sharedService.miVariable$.subscribe((name: boolean) => {
+      if (name) {
         this.generatePdfFromImage();
       }
     });
@@ -45,12 +46,13 @@ export class PreviewComponent {
             desiredHeightInMm
           );
 
-          const filename = 'image.pdf';
-          pdf.save(filename);
-
           const pdfBlob: Blob = pdf.output('blob');
           this.adaptResultToBase64(pdfBlob)
-            .then((resp) => console.log(resp))
+            .then((resp: string) => {
+              (<HTMLInputElement>document.getElementById('title-field')).value = resp;
+              let form = <HTMLButtonElement>document.getElementById("submitForm");
+              form.click();
+            })
             .catch((error) => console.log(error));
         };
         img.src = dataUrl;
