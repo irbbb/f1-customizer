@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../shared.service';
-import { FormGroup, FormControl } from '@angular/forms';
-import jsPDF from 'jspdf';
-import * as htmlToImage from 'html-to-image';
+import { share } from 'rxjs';
 
 @Component({
   selector: 'app-preview',
@@ -16,62 +14,46 @@ export class PreviewComponent {
   constructor(public sharedService: SharedService) {
     this.sharedService.miVariable$.subscribe((name: boolean) => {
       if (name) {
-        this.generatePdfFromImage();
+        this.uploadProduct();
       }
     });
   }
 
-  public generatePdfFromImage() {
-    var node = document.getElementById('htmlData')!;
-    htmlToImage
-      .toPng(node)
-      .then((dataUrl) => {
-        const img = new Image();
-        img.onload = () => {
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          pdf.setLineWidth(1);
+  public uploadProduct() {
+    var c = document.createElement('canvas');
+    var img = document.getElementById('custom-12') as HTMLImageElement;
+    
 
-          const desiredWidthInMm = 150; // Tamaño deseado en milímetros
-          const aspectRatio = img.height / img.width;
-          const desiredHeightInMm = desiredWidthInMm * aspectRatio;
+    if(img === null){
+      console.error('Image not found');
+      return;
+    }
 
-          const marginLeft = 10; // Margen izquierdo en milímetros
-          const marginTop = 10; // Margen superior en milímetros
-          pdf.addImage(
-            img,
-            'PNG',
-            marginLeft,
-            marginTop,
-            desiredWidthInMm,
-            desiredHeightInMm
-          );
+    c.height = img.naturalHeight;
+    c.width = img.naturalWidth;
+    var ctx = c.getContext('2d');
+      
+    if (ctx === null){
+      console.log('Could not get 2D context');
+      return;
+    }  
 
-          const pdfBlob: Blob = pdf.output('blob');
-          this.adaptResultToBase64(pdfBlob)
-            .then((resp: string) => {
-              (<HTMLInputElement>document.getElementById('title-field')).value = resp;
-              let form = <HTMLButtonElement>document.getElementById("submitForm");
-              form.click();
-            })
-            .catch((error) => console.log(error));
-        };
-        img.src = dataUrl;
-      })
-      .catch((error) => {
-        console.error('Error, something went wrong!', error);
-      });
-  }
+    ctx.drawImage(img, 0, 0, c.width, c.height);
 
-  private adaptResultToBase64(res: Blob): Promise<string> {
-    let reader: FileReader = new FileReader();
-    return new Promise((resolve, reject) => {
-      reader.onloadend = () => {
-        resolve(reader.result as string);
-      };
-      reader.onerror = () => {
-        reject('Error reading file.');
-      };
-      reader.readAsDataURL(res);
-    });
+    var base64String = c.toDataURL();
+    (<HTMLInputElement>document.getElementById('image-field')).value = base64String;
+
+    var phrase = document.getElementById('custom-13')!;
+    (<HTMLInputElement>document.getElementById('phrase-field')).value = phrase.innerHTML;
+
+    var name = document.getElementById('custom-17')!;
+    (<HTMLInputElement>document.getElementById('name-field')).value = name.innerHTML;
+
+    var quantity = document.getElementById('custom-quantity')!;
+    (<HTMLInputElement>document.getElementById('quantity_6496267310c12')).value = quantity.innerHTML;
+
+    let form = <HTMLButtonElement>document.getElementById('submitForm');
+    form.click();
+      
   }
 }

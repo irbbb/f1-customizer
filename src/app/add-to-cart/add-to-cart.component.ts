@@ -9,7 +9,7 @@ import { SharedService } from '../shared.service';
 export class AddToCartComponent {
   constructor(public sharedService: SharedService) {}
 
-  test() {
+  addToCart() {
     this.sharedService.miVariable$.next(true)
   }
 }
